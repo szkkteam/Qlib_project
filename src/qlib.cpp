@@ -13,10 +13,10 @@
 using namespace std;
 
 int main() {
-    QLib::QMatrix<float> mat1(10, 10, 1.0);
-    QLib::QMatrix<float> mat2(10, 10, 2.0);
+    QMatrix<float> mat1(10, 10, 1.0);
+    QMatrix<float> mat2(10, 10, 2.0);
 
-    QLib::QMatrix<float> mat3 = mat1 + mat2;
+    QMatrix<float> mat3 = mat1 + mat2;
 
     for (int i=0; i<mat3.GetRows(); i++)
     {

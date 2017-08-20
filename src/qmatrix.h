@@ -8,10 +8,9 @@
 #ifndef QMATRIX_H_
 #define QMATRIX_H_
 
-#include <vector>
 
-namespace QLib
-{
+
+#include <vector>
 
 template <typename Mtype>
 class QMatrix
@@ -63,6 +62,6 @@ private:
 
 #include "qmatrix.cpp"
 
-} // namespace QLib
+ // namespace QLib
 
 #endif /* QMATRIX_H_ */

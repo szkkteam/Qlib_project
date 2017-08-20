@@ -10,8 +10,6 @@
 
 #include "qmatrix.h"
 
-namespace QLib
-{
 
 template <typename Mtype>
 QMatrix<Mtype>::QMatrix(unsigned int _rows, unsigned int _cols, const Mtype& _initial)
@@ -176,11 +174,6 @@ QMatrix<Mtype>& QMatrix<Mtype>::operator*=(const QMatrix<Mtype>& rhs)
 
 
 
-
-
-
-
-}
 
 
 
