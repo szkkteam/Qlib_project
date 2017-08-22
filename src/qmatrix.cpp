@@ -170,11 +170,70 @@ QMatrix<Mtype>& QMatrix<Mtype>::operator*=(const QMatrix<Mtype>& rhs)
     return *this;
 }
 
+template <typename Mtype>
+void QMatrix<Mtype>::Transpose(void)
+{
 
+}
 
+template <typename Mtype>
+void QMatrix<Mtype>::SetToIdentical(void)
+{
 
+}
 
+template <typename Mtype>
+QMatrix<Mtype> QMatrix<Mtype>::operator+(const Mtype& rhs)
+{
 
+}
 
+template <typename Mtype>
+QMatrix<Mtype> QMatrix<Mtype>::operator-(const Mtype& rhs)
+{
+
+}
+
+template <typename Mtype>
+QMatrix<Mtype> QMatrix<Mtype>::operator*(const Mtype& rhs)
+{
+
+}
+
+template <typename Mtype>
+QMatrix<Mtype> QMatrix<Mtype>::operator/(const Mtype& rhs)
+{
+
+}
+
+template <typename Mtype>
+std::vector<Mtype> QMatrix<Mtype>::operator*(const std::vector<Mtype>& rhs)
+{
+
+}
+
+template <typename Mtype>
+Mtype& QMatrix<Mtype>::operator()(const unsigned int& row, unsigned int& col)
+{
+	return this->matrix[row][col];
+}
+
+template <typename Mtype>
+const Mtype& QMatrix<Mtype>::operator()(const unsigned int& row, unsigned int& col) const
+{
+	return this->matrix[row][col];
+}
+
+template <typename Mtype>
+unsigned int QMatrix<Mtype>::GetRows(void) const
+{
+	return this->rows;
+}
+
+template <typename Mtype>
+unsigned int QMatrix<Mtype>::GetCols(void) const
+{
+	return this->cols;
+}
 
 #endif

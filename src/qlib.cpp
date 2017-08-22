@@ -22,7 +22,7 @@ int main() {
     {
       for (int j=0; j<mat3.GetCols(); j++)
       {
-  //      std::cout << mat3(i,j) << ", ";
+        std::cout << mat3(i,j) << ", ";
       }
       std::cout << std::endl;
     }

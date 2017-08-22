@@ -32,8 +32,8 @@ public:
 	QMatrix<Mtype> operator*(const QMatrix<Mtype>& rhs);
 	QMatrix<Mtype>& operator*=(const QMatrix<Mtype>& rhs);
 
-	QMatrix<Mtype> Transpose(void);
-	QMatrix<Mtype>& SetToIdentical(void);
+	void Transpose(void);
+	void SetToIdentical(void);
 
 	// Scalar operations
 	QMatrix<Mtype> operator+(const Mtype& rhs);
@@ -46,8 +46,8 @@ public:
 	//std::vector<Mtype> diag_vec(void);
 
 	// Access individual elements
-	Mtype& operator()(const unsigned int& _row, unsigned int& _col);
-	const Mtype& operator()(const unsigned int& _row, unsigned int& _col) const;
+	Mtype& operator()(const unsigned int& row, unsigned int& col);
+	const Mtype& operator()(const unsigned int& row, unsigned int& col) const;
 
 	// Access the row and columns sizes
 	unsigned int GetRows(void) const;
