@@ -46,8 +46,9 @@ public:
 	//std::vector<Mtype> diag_vec(void);
 
 	// Access individual elements
-	Mtype& operator()(const unsigned int& row, unsigned int& col);
-	const Mtype& operator()(const unsigned int& row, unsigned int& col) const;
+	Mtype& operator()(const unsigned int row, unsigned int col);
+	const Mtype& operator()(const unsigned int row, unsigned int col) const;
+	void Set(unsigned int row, unsigned int col, Mtype value);
 
 	// Access the row and columns sizes
 	unsigned int GetRows(void) const;

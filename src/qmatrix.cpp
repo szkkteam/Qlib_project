@@ -173,55 +173,144 @@ QMatrix<Mtype>& QMatrix<Mtype>::operator*=(const QMatrix<Mtype>& rhs)
 template <typename Mtype>
 void QMatrix<Mtype>::Transpose(void)
 {
+	QMatrix result(rows,cols,0.0);
 
+	result.matrix.resize(cols);
+
+	for (unsigned int i = 0; i < result.matrix.size(); i++)
+	{
+		result.matrix[i].resize(rows);
+	}
+
+	for (unsigned int i = 0; i < rows; i++)
+	{
+		for (unsigned int j = 0; j < cols; j++)
+		{
+			result(i,j) = matrix[j][i];
+		}
+	}
+
+	 (*this) = result;
 }
 
 template <typename Mtype>
 void QMatrix<Mtype>::SetToIdentical(void)
 {
-
+	for (unsigned int i = 0; i < rows; i++)
+	{
+		for (unsigned int j = 0; j < cols; j++)
+		{
+			if (i != j)
+			{
+				this->matrix[i][j] = 0;
+			}
+			else
+			{
+				this->matrix[i][j] = 1;
+			}
+		}
+	}
 }
 
 template <typename Mtype>
 QMatrix<Mtype> QMatrix<Mtype>::operator+(const Mtype& rhs)
 {
+	QMatrix<Mtype> result(rows,cols,0.0);
 
+	for (unsigned int i = 0; i < rows; i++)
+	{
+		for (unsigned int j = 0; j < cols; j++)
+		{
+			result(i,j) = this->matrix[i][j] + rhs;
+		}
+	}
+
+	return result;
 }
 
 template <typename Mtype>
 QMatrix<Mtype> QMatrix<Mtype>::operator-(const Mtype& rhs)
 {
+	QMatrix<Mtype> result(rows,cols,0.0);
 
+	for (unsigned int i = 0; i < rows; i++)
+	{
+		for (unsigned int j = 0; j < cols; j++)
+		{
+			result(i,j) = this->matrix[i][j] - rhs;
+		}
+	}
+
+	return result;
 }
 
 template <typename Mtype>
 QMatrix<Mtype> QMatrix<Mtype>::operator*(const Mtype& rhs)
 {
+	QMatrix<Mtype> result(rows,cols,0.0);
 
+	for (unsigned int i = 0; i < rows; i++)
+	{
+		for (unsigned int j = 0; j < cols; j++)
+		{
+			result(i,j) = this->matrix[i][j] * rhs;
+		}
+	}
+
+	return result;
 }
 
 template <typename Mtype>
 QMatrix<Mtype> QMatrix<Mtype>::operator/(const Mtype& rhs)
 {
+	QMatrix<Mtype> result(rows,cols,0.0);
 
+	for (unsigned int i = 0; i < rows; i++)
+	{
+		for (unsigned int j = 0; j < cols; j++)
+		{
+			result(i,j) = this->matrix[i][j] / rhs;
+		}
+	}
+
+	return result;
 }
 
 template <typename Mtype>
 std::vector<Mtype> QMatrix<Mtype>::operator*(const std::vector<Mtype>& rhs)
 {
+	std::vector<Mtype> result(rhs.size(),0.0);
 
+	for (unsigned int i = 0; i < rows; i++ )
+	{
+		for (unsigned int j = 0; j < cols; j++)
+		{
+			result[i] = this->matrix[i][j] * rhs[j];
+		}
+	}
+
+	return result;
 }
 
 template <typename Mtype>
-Mtype& QMatrix<Mtype>::operator()(const unsigned int& row, unsigned int& col)
+Mtype& QMatrix<Mtype>::operator()(const unsigned int row, unsigned int col)
 {
 	return this->matrix[row][col];
 }
 
 template <typename Mtype>
-const Mtype& QMatrix<Mtype>::operator()(const unsigned int& row, unsigned int& col) const
+const Mtype& QMatrix<Mtype>::operator()(const unsigned int row, unsigned int col) const
 {
 	return this->matrix[row][col];
+}
+
+template <typename Mtype>
+void QMatrix<Mtype>::Set(unsigned int row, unsigned int col, Mtype value)
+{
+	if ( (row <= rows) && (col <= cols) )
+	{
+		this->matrix[row][col] = value;
+	}
 }
 
 template <typename Mtype>

@@ -13,16 +13,36 @@
 using namespace std;
 
 int main() {
-    QMatrix<float> mat1(10, 10, 1.0);
+    QMatrix<float> mat1(3, 3, 1.0);
     QMatrix<float> mat2(10, 10, 2.0);
 
     QMatrix<float> mat3 = mat1 + mat2;
 
-    for (int i=0; i<mat3.GetRows(); i++)
+    float value = 0.0;
+
+    for (unsigned int i=0; i<mat1.GetRows(); i++)
     {
-      for (int j=0; j<mat3.GetCols(); j++)
+      for (unsigned int j=0; j<mat1.GetCols(); j++)
       {
-        std::cout << mat3(i,j) << ", ";
+        mat1.Set(i,j, value++);
+      }
+    }
+    for (unsigned int i=0; i<mat1.GetRows(); i++)
+    {
+      for (unsigned int j=0; j<mat1.GetCols(); j++)
+      {
+        cout << mat1(i,j) << ", ";
+      }
+      std::cout << std::endl;
+    }
+    std::cout << std::endl;
+    mat1.Transpose();
+
+    for (unsigned int i=0; i<mat1.GetRows(); i++)
+    {
+      for (unsigned int j=0; j<mat1.GetCols(); j++)
+      {
+        cout << mat1(i,j) << ", ";
       }
       std::cout << std::endl;
     }
