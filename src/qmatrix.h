@@ -32,7 +32,7 @@ public:
 	QMatrix<Mtype> operator*(const QMatrix<Mtype>& rhs);
 	QMatrix<Mtype>& operator*=(const QMatrix<Mtype>& rhs);
 
-	void Transpose(void);
+	QMatrix<Mtype> Transpose(void);
 	void SetToIdentical(void);
 
 	// Scalar operations
