@@ -12,6 +12,11 @@
 
 #include <vector>
 
+namespace Qlib
+{
+
+
+
 template <typename Mtype>
 class QMatrix
 {
@@ -60,7 +65,7 @@ private:
 	unsigned int cols;
 };
 
-
+}
 #include "qmatrix.cpp"
 
  // namespace QLib

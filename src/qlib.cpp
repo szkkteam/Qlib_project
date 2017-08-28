@@ -11,6 +11,7 @@
 
 //using namespace QLib;
 using namespace std;
+using namespace Qlib;
 
 int main() {
     QMatrix<float> mat1(3, 3, 1.0);

@@ -10,6 +10,9 @@
 
 #include "qmatrix.h"
 
+namespace Qlib
+{
+
 
 template <typename Mtype>
 QMatrix<Mtype>::QMatrix(unsigned int _rows, unsigned int _cols, const Mtype& _initial)
@@ -317,5 +320,8 @@ unsigned int QMatrix<Mtype>::GetCols(void) const
 {
 	return this->cols;
 }
+
+}
+
 
 #endif
