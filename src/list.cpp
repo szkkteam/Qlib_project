@@ -68,6 +68,7 @@ namespace Qlib
         	return pCurrentNode->data;
         }
 
+
         /**
          * List methods
          */
@@ -75,6 +76,12 @@ namespace Qlib
         template < class T >
         List<T>::~List()
         {
+        	Clear();
+        }
+
+        template < class T >
+        void List<T>::Clear(void)
+		{
             Node * pCrawler = this->pHead;
 
             while (pCrawler)
@@ -83,7 +90,7 @@ namespace Qlib
                 pCrawler = pCrawler->pNext;
                 delete tmp;
             }
-        }
+		}
 
 
         template < class T >
@@ -99,17 +106,19 @@ namespace Qlib
         }
 
         template < class T >
-        void List<T>::PushFront(T data)
+        class List<T>::Iterator List<T>::PushFront(T data)
         {
         	Node * element = this->sentinel.NewNode(data);
 
             element->pNext = this->pHead;
             this->pHead = element;
             this->size++;
+
+            return Iterator(element);
         }
 
         template < class T >
-        void List<T>::PushBack(T data)
+        class List<T>::Iterator List<T>::PushBack(T data)
         {
             Node * element = this->sentinel.NewNode(data);
 
@@ -129,7 +138,46 @@ namespace Qlib
             }
 
             this->size++;
+
+            return Iterator(element);
         }
+
+        template < class T >
+        void List<T>::Erase(Iterator& element)
+		{
+
+        	if (element.pCurrentNode == this->pHead)
+        	{
+        		this->pHead = element.pCurrentNode->pNext;
+        		delete element.pCurrentNode;
+        	}
+
+        	else if (element.pCurrentNode != nullptr)
+        	{
+                Node * pCrawler = this->pHead;
+
+                while(pCrawler->pNext != element.pCurrentNode)
+                {
+                    pCrawler = pCrawler->pNext;
+                }
+
+                pCrawler->pNext = element.pCurrentNode->pNext;
+                delete element.pCurrentNode;
+        	}
+		}
+
+        template < class T >
+        bool List<T>::IsEmpty(void)
+		{
+        	return (this->pHead == nullptr);
+		}
+
+        template < class T >
+        size_t List<T>::Size(void)
+		{
+        	return this->size;
+		}
+
 
     }   /** SL */
 }   /** Qlib */

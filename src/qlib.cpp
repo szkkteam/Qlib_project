@@ -59,13 +59,19 @@ void listTest(void)
     List<int> list1;
     list1.PushBack(2);
     list1.PushBack(10);
-    list1.PushBack(20);
+    List<int>::Iterator item = list1.PushBack(20);
 
     for (List<int>::Iterator it = list1.Begin(); it != list1.End(); it++)
     {
     	cout << *it << endl;
     }
 
+    list1.Erase(item);
+
+    for (List<int>::Iterator it = list1.Begin(); it != list1.End(); it++)
+    {
+    	cout << *it << endl;
+    }
 }
 
 int main() {

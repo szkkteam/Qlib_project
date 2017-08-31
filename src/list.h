@@ -48,9 +48,9 @@ namespace Qlib
 
                      T operator*();
 
+                     const Node *  pCurrentNode;
                  private:
 
-                 const Node *  pCurrentNode;
 
 
                      friend class list;
@@ -62,13 +62,21 @@ namespace Qlib
                  List(Node * head = nullptr) noexcept :pHead(head), size(1) { }
                  ~List();
 
+                 void Clear(void);
+
                  Iterator Begin(void) const;
                  Iterator End(void) const;
 
-                 void PushFront(T data);
-                 void PushBack(T data);
+                 Iterator PushFront(T data);
+                 Iterator PushBack(T data);
+
+                 void Erase(Iterator& element);
+
+                 bool IsEmpty(void);
+                 size_t Size(void);
 
              private:
+
 
                  // FIXME : Change this sentinel, to something else
                  Node sentinel;
