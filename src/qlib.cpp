@@ -13,13 +13,13 @@
 //using namespace QLib;
 using namespace std;
 using namespace Qlib;
+using namespace Qlib::SL;
 
-int main() {
+void matrixTest(void)
+{
     QMatrix<float> mat1(3, 3, 1.0);
     QMatrix<float> mat2(10, 10, 2.0);
 
-
-    Qlib::SL::List<int> list1;
 
     //QMatrix<float> mat3 = mat1 + mat2;
 
@@ -51,6 +51,29 @@ int main() {
       }
       std::cout << std::endl;
     }
+}
+
+void listTest(void)
+{
+
+    List<int> list1;
+    list1.PushBack(2);
+    list1.PushBack(10);
+    list1.PushBack(20);
+
+    for (List<int>::Iterator it = list1.Begin(); it != list1.End(); it++)
+    {
+    	cout << *it << endl;
+    }
+
+}
+
+int main() {
+
+	// Test the matrix Class;
+//	matrixTest();
+	// Test the list class
+	listTest();
 
 	return 0;
 }

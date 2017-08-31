@@ -5,6 +5,8 @@
  *      Author: irusics
  */
 
+#ifndef __LIST_CPP
+#define __LIST_CPP
 
 #include "list.h"
 
@@ -16,7 +18,7 @@ namespace Qlib
          * Node methods
          */
         template < class T >
-        class List<T>::Node& List<T>::Node::NewNode(T data)
+        class List<T>::Node* List<T>::Node::NewNode(T data)
         {
             Node * element = new Node;
             element->data = data;
@@ -29,11 +31,47 @@ namespace Qlib
         /**
          * Iterator methods
          */
+        template < class T >
+        class List<T>::Iterator& List<T>::Iterator::operator=(List<T>::Node * pNode)
+        {
+        	this->pCurrentNode = pNode;
+        	return *this;
+        }
 
+        template < class T >
+        class List<T>::Iterator& List<T>::Iterator::operator++()
+		{
+        	if (this->pCurrentNode)
+        	{
+        		this->pCurrentNode = this->pCurrentNode->pNext;
+        	}
+        	return *this;
+		}
+
+        template < class T >
+        class List<T>::Iterator List<T>::Iterator::operator++(int)
+		{
+        	Iterator tmp = (*this);
+        	++*this;
+        	return tmp;
+		}
+
+        template < class T >
+        bool List<T>::Iterator::operator!=(const Iterator& iterator) const
+		{
+        	return (this->pCurrentNode != iterator.pCurrentNode);
+		}
+
+        template < class T >
+        T List<T>::Iterator::operator*()
+        {
+        	return pCurrentNode->data;
+        }
 
         /**
          * List methods
          */
+
         template < class T >
         List<T>::~List()
         {
@@ -63,7 +101,7 @@ namespace Qlib
         template < class T >
         void List<T>::PushFront(T data)
         {
-            Node * element = List<T>::Node::NewNode(data);
+        	Node * element = this->sentinel.NewNode(data);
 
             element->pNext = this->pHead;
             this->pHead = element;
@@ -73,7 +111,7 @@ namespace Qlib
         template < class T >
         void List<T>::PushBack(T data)
         {
-            Node * element = List<T>::Node::NewNode(data);
+            Node * element = this->sentinel.NewNode(data);
 
             if (this->pHead != nullptr)
             {
@@ -96,3 +134,4 @@ namespace Qlib
     }   /** SL */
 }   /** Qlib */
 
+#endif
