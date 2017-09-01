@@ -63,11 +63,22 @@ namespace Qlib
 		}
 
         template < class T >
-        T List<T>::Iterator::operator*()
+        bool List<T>::Iterator::operator==(const Iterator& iterator) const
+        {
+            return (this->pCurrentNode == iterator.pCurrentNode);
+        }
+
+        template < class T >
+        T List<T>::Iterator::operator*() const
         {
         	return pCurrentNode->data;
         }
 
+        template < class T >
+        T* List<T>::Iterator::operator->() const
+        {
+            return &pCurrentNode->data;
+        }
 
         /**
          * List methods
@@ -150,6 +161,7 @@ namespace Qlib
         	{
         		this->pHead = element.pCurrentNode->pNext;
         		delete element.pCurrentNode;
+        		this->size--;
         	}
 
         	else if (element.pCurrentNode != nullptr)
@@ -163,6 +175,7 @@ namespace Qlib
 
                 pCrawler->pNext = element.pCurrentNode->pNext;
                 delete element.pCurrentNode;
+                this->size--;
         	}
 		}
 
@@ -180,6 +193,70 @@ namespace Qlib
 
 
     }   /** SL */
+
+    namespace DL
+    {
+        /**
+         * Node methods
+         */
+        template < class T >
+        class List<T>::Node* List<T>::Node::NewNode(T data)
+        {
+            Node * element = new Node;
+            element->data = data;
+            element->pNext = nullptr;
+            element->pPrev = nullptr;
+
+            return element;
+        }
+
+
+        /**
+         * Iterator methods
+         */
+        template < class T >
+        const T& List<T>::const_iterator::operator*() const
+        {
+            return pCurrentNode->data;
+        }
+
+        template < class T >
+        List<T>::const_iterator::const_iterator& List<T>::const_iterator::operator++() const
+        {
+            pCurrentNode = pCurrentNode->pNext;
+            return *this;
+        }
+
+        template < class T >
+        List<T>::const_iterator::const_iterator& List<T>::const_iterator::operator++(int) const
+        {
+            const_iterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+
+        /**
+         * List methods
+         */
+        template < class T >
+        List<T>::List()
+        {
+            Node * sentinel = new Node;
+
+            this->pHead = sentinel;
+
+            this->pHead->pNext = sentinel;
+            this->pHead->pPrev = sentinel;
+
+            this->size = 0;
+        }
+
+        template < class T >
+        List<T>::~List()
+        {
+
+        }
+    }
 }   /** Qlib */
 
 #endif

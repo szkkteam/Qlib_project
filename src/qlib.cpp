@@ -56,15 +56,21 @@ void matrixTest(void)
 void listTest(void)
 {
 
+    Qlib::DL::List<int> list2;
+
     List<int> list1;
     list1.PushBack(2);
     list1.PushBack(10);
     List<int>::Iterator item = list1.PushBack(20);
+    list1.PushFront(9);
+    list1.PushFront(0);
 
     for (List<int>::Iterator it = list1.Begin(); it != list1.End(); it++)
     {
     	cout << *it << endl;
     }
+
+    cout << "size: " << list1.Size() << endl;
 
     list1.Erase(item);
 
