@@ -123,8 +123,10 @@ namespace Qlib
                     const T& operator*() const;
 
                     const_iterator& operator++() const;
-                    const_iterator& operator++(int) const;
+                    const_iterator operator++(int) const;
 
+                    const_iterator& operator--() const;
+                    const_iterator operator--(int) const;
 
 
                 private :

@@ -221,17 +221,32 @@ namespace Qlib
         }
 
         template < class T >
-        List<T>::const_iterator::const_iterator& List<T>::const_iterator::operator++() const
+        class List<T>::const_iterator& List<T>::const_iterator::operator++() const
         {
             pCurrentNode = pCurrentNode->pNext;
             return *this;
         }
 
         template < class T >
-        List<T>::const_iterator::const_iterator& List<T>::const_iterator::operator++(int) const
+        class List<T>::const_iterator List<T>::const_iterator::operator++(int) const
         {
             const_iterator tmp = *this;
             ++(*this);
+            return tmp;
+        }
+
+        template < class T >
+        class List<T>::const_iterator& List<T>::const_iterator::operator--() const
+        {
+            pCurrentNode = pCurrentNode->pPrev;
+            return *this;
+        }
+
+        template < class T >
+        class List<T>::const_iterator List<T>::const_iterator::operator--(int) const
+        {
+            const_iterator tmp = *this;
+            --(*this);
             return tmp;
         }
 
