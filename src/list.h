@@ -31,7 +31,7 @@ namespace Qlib
                      Node * pNext;
 
                      // Linked list methods need to access Node information
-                     friend class list;
+                     friend class List;
                  };
 
 
@@ -51,10 +51,10 @@ namespace Qlib
                      T operator*() const;
                      T* operator->() const;
 
-                     const Node *  pCurrentNode;
                  private:
+                     const Node *  pCurrentNode;
 
-                     friend class list;
+                     friend class List;
                  };
 
              public:
@@ -110,53 +110,55 @@ namespace Qlib
                     : data(std::move(data)), pPrev(pPrev), pNext(pNext) {}
 
                     // Linked list methods need to access Node information
-                    friend class list;
+                    friend class List;
                 };
 
              public:
 
-                class const_iterator
+                class const_Iterator
                 {
-                    const_iterator() : pCurrentNode(nullptr) {}
+                public:
+                    const_Iterator() : pCurrentNode(nullptr) {}
 
                     const T& operator*() const;
 
-                    const_iterator& operator++() const;
-                    const_iterator operator++(int) const;
+                    const_Iterator& operator++() const;
+                    const_Iterator operator++(int) const;
 
-                    const_iterator& operator--() const;
-                    const_iterator operator--(int) const;
+                    const_Iterator& operator--() const;
+                    const_Iterator operator--(int) const;
 
-                    bool operator!=(const const_iterator& rhs) const;
-                    bool operator==(const const_iterator& rhs) const;
+                    bool operator!=(const const_Iterator& rhs) const;
+                    bool operator==(const const_Iterator& rhs) const;
 
-                private :
-                    const_iterator(Node * pNode) : pCurrentNode(pNode) {}
+                protected :
+                    T& Retrieve() const;
 
-                    const Node *  pCurrentNode;
+                    const_Iterator(Node * pNode) : pCurrentNode(pNode) {}
 
-                    friend class list;
+                    Node *  pCurrentNode;
+
+                    friend class List;
                 };
 
              public:
 
-                class iterator : public const_iterator
+                class Iterator : public const_Iterator
                 {
-                    iterator() { }
+                public:
+                    Iterator() { }
 
-                    T& operator*() const { return  const_iterator::operator*(); }
+                    T& operator*() ;
 
-                    iterator& operator++() const ;
-                    iterator operator++(int) const;
+                    Iterator& operator++() ;
+                    Iterator operator++(int) ;
 
-                    iterator& operator--() const;
-                    iterator operator--(int) const;
+                    Iterator& operator--() ;
+                    Iterator operator--(int) ;
+                protected:
+                    Iterator(Node * pNode) : const_Iterator(pNode) {}
 
-                    bool operator!=(const iterator& rhs) const;
-                    bool operator==(const iterator& rhs) const;
-
-                private:
-                    iterator(Node * pNode) : const_iterator(pNode) {}
+                    friend class List;
                 };
 
              public:
@@ -168,20 +170,40 @@ namespace Qlib
            //     List(const list&& rhs) : size(rhs.size), pHead(rhs.pHead);
                 List& operator=(const List&& rhs);
 
-                iterator Begin(void);
-                //const_iterator Begin(void);
-                iterator End(void);
-                //const_iterator End(void);
+                Iterator Begin(void);
+                //const_Iterator Begin(void);
+                Iterator End(void);
+                //const_Iterator End(void);
+
+                size_t Size(void);
+                bool IsEmpty(void);
+                void Clear(void);
+
+                T& Front(void);
+                T& Back(void);
+
+                Iterator PushFront(T& data);
+                Iterator PushBack(T& data);
+#if 1
+                Iterator PushFront(T&& data);
+                Iterator PushBack(T&& data);
+#endif
+                Iterator Insert(Iterator it, T& data);
+                Iterator Insert(Iterator it, T&& data);
+                Iterator Erase (Iterator it);
+
+                void PopFront(void);
+                void PopBack(void);
 
              private:
 
 
                 Node * pHead;
+                Node * pTail;
 
-                size_t size;
+                int size;
 
-                iterator Erase (iterator it);
-                void Clear(void);
+
                 void Init(void);
 
              };

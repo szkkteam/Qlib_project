@@ -13,7 +13,7 @@
 //using namespace QLib;
 using namespace std;
 using namespace Qlib;
-using namespace Qlib::SL;
+using namespace Qlib::DL;
 
 void matrixTest(void)
 {
@@ -56,14 +56,12 @@ void matrixTest(void)
 void listTest(void)
 {
 
-    Qlib::DL::List<int> list2;
-
     List<int> list1;
-    list1.PushBack(2);
-    list1.PushBack(10);
-    List<int>::Iterator item = list1.PushBack(20);
-    list1.PushFront(9);
+    list1.PushBack(11);
+    list1.PushBack(20);
+    List<int>::Iterator item = list1.PushBack(5);
     list1.PushFront(0);
+    list1.PushFront(40);
 
     for (List<int>::Iterator it = list1.Begin(); it != list1.End(); it++)
     {
@@ -78,6 +76,7 @@ void listTest(void)
     {
     	cout << *it << endl;
     }
+
 }
 
 int main() {

@@ -10,6 +10,9 @@
 
 #include "list.h"
 
+#include <iostream>
+using namespace std;
+
 namespace Qlib
 {
     namespace SL
@@ -215,94 +218,94 @@ namespace Qlib
          * Iterator methods
          */
         template < class T >
-        const T& List<T>::const_iterator::operator*() const
+        const T& List<T>::const_Iterator::operator*() const
         {
-            return pCurrentNode->data;
+            return List<T>::const_Iterator::Retrieve();
         }
 
         template < class T >
-        class List<T>::const_iterator& List<T>::const_iterator::operator++() const
+        class List<T>::const_Iterator& List<T>::const_Iterator::operator++() const
         {
-            pCurrentNode = pCurrentNode->pNext;
+            this->pCurrentNode =  this->pCurrentNode->pNext;
             return *this;
         }
 
         template < class T >
-        class List<T>::const_iterator List<T>::const_iterator::operator++(int) const
+        class List<T>::const_Iterator List<T>::const_Iterator::operator++(int) const
         {
-            const_iterator tmp = *this;
+            const_Iterator tmp = *this;
             ++(*this);
             return tmp;
         }
 
         template < class T >
-        class List<T>::const_iterator& List<T>::const_iterator::operator--() const
+        class List<T>::const_Iterator& List<T>::const_Iterator::operator--() const
         {
             pCurrentNode = pCurrentNode->pPrev;
             return *this;
         }
 
         template < class T >
-        class List<T>::const_iterator List<T>::const_iterator::operator--(int) const
+        class List<T>::const_Iterator List<T>::const_Iterator::operator--(int) const
         {
-            const_iterator tmp = *this;
+            const_Iterator tmp = *this;
             --(*this);
             return tmp;
         }
 
         template < class T >
-        bool List<T>::const_iterator::operator!=(const const_iterator& rhs) const
+        bool List<T>::const_Iterator::operator!=(const const_Iterator& rhs) const
         {
             return ( this->pCurrentNode != rhs.pCurrentNode);
         }
 
         template < class T >
-        bool List<T>::const_iterator::operator==(const const_iterator& rhs) const
+        bool List<T>::const_Iterator::operator==(const const_Iterator& rhs) const
         {
             return (this->pCurrentNode == rhs.pCurrentNode);
         }
 
+        template < class T >
+        T& List<T>::const_Iterator::Retrieve() const
+        {
+        	return this->pCurrentNode->data;
+        }
+
 
         template < class T >
-        class List<T>::iterator::iterator& List<T>::iterator::operator++() const
+        T& List<T>::Iterator::operator*()
+        {
+            return List<T>::const_Iterator::Retrieve();
+        }
+
+        template < class T >
+        class List<T>::Iterator& List<T>::Iterator::operator++()
         {
             this->pCurrentNode = this->pCurrentNode->pNext;
             return *this;
         }
 
         template < class T >
-        class List<T>::iterator::iterator List<T>::iterator::operator++(int) const
+        class List<T>::Iterator List<T>::Iterator::operator++(int)
         {
-            const_iterator tmp = *this;
+            Iterator tmp = *this;
             ++(*this);
             return tmp;
         }
 
         template < class T >
-        class List<T>::iterator::iterator& List<T>::iterator::operator--() const
+        class List<T>::Iterator& List<T>::Iterator::operator--()
         {
             this->pCurrentNode = this->pCurrentNode->pPrev;
             return *this;
         }
 
         template < class T >
-        class List<T>::iterator::iterator List<T>::iterator::operator--(int) const
+        class List<T>::Iterator List<T>::Iterator::operator--(int)
         {
-            const_iterator tmp = *this;
+            Iterator tmp = *this;
             --(*this);
             return tmp;
-        }
-
-        template < class T >
-        bool List<T>::iterator::operator!=(const iterator& rhs) const
-        {
-            return ( this->pCurrentNode != rhs.pCurrentNode);
-        }
-
-        template < class T >
-        bool List<T>::iterator::operator==(const iterator& rhs) const
-        {
-            return ( this->pCurrentNode == rhs.pCurrentNode);
         }
 
         /**
@@ -350,34 +353,139 @@ namespace Qlib
         }
 
         template < class T >
-        class List<T>::iterator List<T>::Begin(void)
+        class List<T>::Iterator List<T>::Begin(void)
         {
-            return ( pHead->pNext);
+            return ( pHead->pNext );
         }
 /*
         template < class T >
-        List<T>::const_iterator List<T>::Begin(void)
+        List<T>::const_Iterator List<T>::Begin(void)
         {
             return ( pHead->pNext);
         }
 */
         template < class T >
-        class List<T>::iterator List<T>::End(void)
+        class List<T>::Iterator List<T>::End(void)
         {
-            return ( pHead );
+            return ( Iterator (pTail ) );
         }
 /*
         template < class T >
-        List<T>::const_iterator List<T>::End(void)
+        List<T>::const_Iterator List<T>::End(void)
         {
             return ( pHead );
         }
 */
+
         template < class T >
-        class List<T>::iterator List<T>::Erase (List<T>::iterator it)
+        size_t List<T>::Size(void)
+        {
+        	return this->size;
+        }
+
+        template < class T >
+        bool List<T>::IsEmpty(void)
+        {
+        	return ( List<T>::Size() == 0);
+        }
+
+        template < class T >
+        void List<T>::Clear(void)
+        {
+        	while( List<T>::IsEmpty() == false )
+        	{
+        		List<T>::PopFront();
+        	}
+        }
+
+        template < class T >
+        T& List<T>::Front(void)
+        {
+        	return *(List<T>::Begin());
+        }
+
+        template < class T >
+        T& List<T>::Back(void)
+        {
+        	return *(--List<T>::End());
+        }
+
+        template < class T >
+        class List<T>::Iterator List<T>::PushFront(T& data)
+        {
+        	return List<T>::Insert( List<T>::Begin(), data );
+        }
+
+        template < class T >
+        class List<T>::Iterator List<T>::PushBack(T& data)
+        {
+           	return List<T>::Insert( List<T>::End(), data );
+        }
+#if 1
+        template < class T >
+        class List<T>::Iterator List<T>::PushFront(T&& data)
+        {
+        	return List<T>::Insert( List<T>::Begin(), std::move( data ) );
+        }
+
+        template < class T >
+        class List<T>::Iterator List<T>::PushBack(T&& data)
+        {
+           	return List<T>::Insert( List<T>::End(), std::move( data ) );
+        }
+#endif
+        template < class T >
+        void List<T>::PopFront(void)
+        {
+        	List<T>::Erase( List<T>::Begin() );
+        }
+
+        template < class T >
+        void List<T>::PopBack(void)
+        {
+        	List<T>::Erase( List<T>::End() );
+        }
+
+        template < class T >
+        class List<T>::Iterator List<T>::Insert(Iterator it, T& data)
+        {
+        	Node * tmp = it.pCurrentNode;
+        	Node * element = new Node(data, tmp->pPrev, tmp);
+        	tmp->pPrev = element;
+        	tmp->pPrev->pNext = element;
+            ++this->size;
+
+        	return (Iterator( element ));
+        }
+
+        template < class T >
+        class List<T>::Iterator List<T>::Insert(Iterator it, T&& data)
+        {
+#if 0
+        	// DAFAQ?!?!?!!?! NOT working
+    //    	cout << "It: " << size;
+        	Node * tmp = it.pCurrentNode;
+            ++size;
+
+        	Node * element = new Node( std::move( data ), tmp->pPrev, tmp);
+        	tmp->pPrev = element;
+        	tmp->pPrev->pNext = element;
+
+      //  	cout << "It: " << size;
+
+        	return (Iterator( element ));
+#else
+            Node *p = it.pCurrentNode;
+            ++this->size;
+            return Iterator( p->pPrev = p->pPrev->pNext = new Node( std::move( data ), p->pPrev, p ) );
+#endif
+        }
+
+        template < class T >
+        class List<T>::Iterator List<T>::Erase (List<T>::Iterator it)
         {
             Node * tmpNode = it.pCurrentNode;
-            iterator tmpIt (tmpNode->pNext);
+            Iterator tmpIt (tmpNode->pNext);
 
             tmpNode->pPrev->pNext = tmpNode->pNext;
             tmpNode->pNext->pPrev = tmpNode->pPrev;
@@ -389,21 +497,15 @@ namespace Qlib
             return tmpIt;
         }
 
-        template < class T >
-        void List<T>::Clear(void)
-        {
-
-        }
 
         template < class T >
         void List<T>::Init(void)
         {
-            Node * sentinel = new Node;
+        	this->pHead = new Node;
+        	this->pTail = new Node;
 
-            this->pHead = sentinel;
-
-            this->pHead->pNext = sentinel;
-            this->pHead->pPrev = sentinel;
+            this->pHead->pNext = this->pTail;
+            this->pTail->pPrev = this->pHead;
 
             this->size = 0;
         }
