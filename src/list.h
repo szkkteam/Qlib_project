@@ -163,6 +163,15 @@ namespace Qlib
                 List();
                 ~List();
 
+                List(const List& rhs);
+                List& operator=(const List& rhs);
+           //     List(const list&& rhs) : size(rhs.size), pHead(rhs.pHead);
+                List& operator=(const List&& rhs);
+
+                iterator Begin(void);
+                //const_iterator Begin(void);
+                iterator End(void);
+                //const_iterator End(void);
 
              private:
 
@@ -171,6 +180,7 @@ namespace Qlib
 
                 size_t size;
 
+                iterator Erase (iterator it);
                 void Clear(void);
                 void Init(void);
 

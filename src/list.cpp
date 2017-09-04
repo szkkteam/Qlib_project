@@ -321,13 +321,79 @@ namespace Qlib
             Clear();
         }
 
+        template < class T >
+        List<T>::List(const List& rhs)
+        {
+            Init();
+
+  //          this->pHead = rhs.pHead;
+    //        this->size = rhs.size;
+        }
+
+        template < class T >
+        List<T>& List<T>::operator=(const List<T>& rhs)
+        {
+            List copy = rhs;
+            std::swap(*this, copy);
+            return *this;
+        }
+
+   //     List(const list&& rhs) : size(rhs.size), pHead(rhs.pHead);
+
+        template < class T >
+        List<T>& List<T>::operator=(const List<T>&& rhs)
+        {
+            std::swap( this->size, rhs.size);
+            std::swap( this->pHead, rhs.pHead);
+
+            return *this;
+        }
+
+        template < class T >
+        class List<T>::iterator List<T>::Begin(void)
+        {
+            return ( pHead->pNext);
+        }
+/*
+        template < class T >
+        List<T>::const_iterator List<T>::Begin(void)
+        {
+            return ( pHead->pNext);
+        }
+*/
+        template < class T >
+        class List<T>::iterator List<T>::End(void)
+        {
+            return ( pHead );
+        }
+/*
+        template < class T >
+        List<T>::const_iterator List<T>::End(void)
+        {
+            return ( pHead );
+        }
+*/
+        template < class T >
+        class List<T>::iterator List<T>::Erase (List<T>::iterator it)
+        {
+            Node * tmpNode = it.pCurrentNode;
+            iterator tmpIt (tmpNode->pNext);
+
+            tmpNode->pPrev->pNext = tmpNode->pNext;
+            tmpNode->pNext->pPrev = tmpNode->pPrev;
+
+            delete tmpNode;
+
+            --this->size;
+
+            return tmpIt;
+        }
 
         template < class T >
         void List<T>::Clear(void)
         {
 
         }
-
 
         template < class T >
         void List<T>::Init(void)
