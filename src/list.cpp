@@ -250,11 +250,87 @@ namespace Qlib
             return tmp;
         }
 
+        template < class T >
+        bool List<T>::const_iterator::operator!=(const const_iterator& rhs) const
+        {
+            return ( this->pCurrentNode != rhs.pCurrentNode);
+        }
+
+        template < class T >
+        bool List<T>::const_iterator::operator==(const const_iterator& rhs) const
+        {
+            return (this->pCurrentNode == rhs.pCurrentNode);
+        }
+
+
+        template < class T >
+        class List<T>::iterator::iterator& List<T>::iterator::operator++() const
+        {
+            this->pCurrentNode = this->pCurrentNode->pNext;
+            return *this;
+        }
+
+        template < class T >
+        class List<T>::iterator::iterator List<T>::iterator::operator++(int) const
+        {
+            const_iterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+
+        template < class T >
+        class List<T>::iterator::iterator& List<T>::iterator::operator--() const
+        {
+            this->pCurrentNode = this->pCurrentNode->pPrev;
+            return *this;
+        }
+
+        template < class T >
+        class List<T>::iterator::iterator List<T>::iterator::operator--(int) const
+        {
+            const_iterator tmp = *this;
+            --(*this);
+            return tmp;
+        }
+
+        template < class T >
+        bool List<T>::iterator::operator!=(const iterator& rhs) const
+        {
+            return ( this->pCurrentNode != rhs.pCurrentNode);
+        }
+
+        template < class T >
+        bool List<T>::iterator::operator==(const iterator& rhs) const
+        {
+            return ( this->pCurrentNode == rhs.pCurrentNode);
+        }
+
         /**
          * List methods
          */
         template < class T >
         List<T>::List()
+        {
+            Init();
+        }
+
+
+        template < class T >
+        List<T>::~List()
+        {
+            Clear();
+        }
+
+
+        template < class T >
+        void List<T>::Clear(void)
+        {
+
+        }
+
+
+        template < class T >
+        void List<T>::Init(void)
         {
             Node * sentinel = new Node;
 
@@ -264,12 +340,6 @@ namespace Qlib
             this->pHead->pPrev = sentinel;
 
             this->size = 0;
-        }
-
-        template < class T >
-        List<T>::~List()
-        {
-
         }
     }
 }   /** Qlib */

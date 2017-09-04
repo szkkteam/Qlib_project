@@ -117,7 +117,6 @@ namespace Qlib
 
                 class const_iterator
                 {
-                    const_iterator(Node * pNode) : pCurrentNode(pNode) {}
                     const_iterator() : pCurrentNode(nullptr) {}
 
                     const T& operator*() const;
@@ -128,12 +127,36 @@ namespace Qlib
                     const_iterator& operator--() const;
                     const_iterator operator--(int) const;
 
+                    bool operator!=(const const_iterator& rhs) const;
+                    bool operator==(const const_iterator& rhs) const;
 
                 private :
+                    const_iterator(Node * pNode) : pCurrentNode(pNode) {}
 
                     const Node *  pCurrentNode;
 
                     friend class list;
+                };
+
+             public:
+
+                class iterator : public const_iterator
+                {
+                    iterator() { }
+
+                    T& operator*() const { return  const_iterator::operator*(); }
+
+                    iterator& operator++() const ;
+                    iterator operator++(int) const;
+
+                    iterator& operator--() const;
+                    iterator operator--(int) const;
+
+                    bool operator!=(const iterator& rhs) const;
+                    bool operator==(const iterator& rhs) const;
+
+                private:
+                    iterator(Node * pNode) : const_iterator(pNode) {}
                 };
 
              public:
@@ -147,6 +170,9 @@ namespace Qlib
                 Node * pHead;
 
                 size_t size;
+
+                void Clear(void);
+                void Init(void);
 
              };
 
