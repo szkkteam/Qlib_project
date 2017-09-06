@@ -20,34 +20,62 @@ namespace Qlib
         /**
          * Node methods
          */
-        template < class T >
-        class List<T>::Node* List<T>::Node::NewNode(T data)
-        {
-            Node * element = new Node;
-            element->data = data;
-            element->pNext = nullptr;
-
-            return element;
-        }
-
 
         /**
          * Iterator methods
          */
+    	template < class T >
+    	const T& List<T>::const_Iterator::operator*() const
+		{
+    		return List<T>::const_Iterator::Retrieve();
+		}
+
         template < class T >
-        class List<T>::Iterator& List<T>::Iterator::operator=(List<T>::Node * pNode)
-        {
-        	this->pCurrentNode = pNode;
+        class List<T>::const_Iterator& List<T>::const_Iterator::operator++() const
+		{
+
+       		this->pCurrentNode = this->pCurrentNode->pNext;
         	return *this;
+		}
+
+        template < class T >
+        class List<T>::const_Iterator List<T>::const_Iterator::operator++(int) const
+		{
+        	const_Iterator tmp = (*this);
+        	++(*this);
+        	return tmp;
+		}
+
+        template < class T >
+        bool List<T>::const_Iterator::operator!=(const const_Iterator& rhs) const
+		{
+        	return (this->pCurrentNode != rhs.pCurrentNode);
+		}
+
+        template < class T >
+        bool List<T>::const_Iterator::operator==(const const_Iterator& rhs) const
+		{
+        	return (this->pCurrentNode == rhs.pCurrentNode);
+		}
+
+        template < class T >
+        T& List<T>::const_Iterator::Retrieve() const
+        {
+        	return this->pCurrentNode->data;
+        }
+
+
+        template < class T >
+        T& List<T>::Iterator::operator*()
+        {
+            return List<T>::const_Iterator::Retrieve();
         }
 
         template < class T >
         class List<T>::Iterator& List<T>::Iterator::operator++()
 		{
-        	if (this->pCurrentNode)
-        	{
-        		this->pCurrentNode = this->pCurrentNode->pNext;
-        	}
+
+       		this->pCurrentNode = this->pCurrentNode->pNext;
         	return *this;
 		}
 
@@ -55,144 +83,232 @@ namespace Qlib
         class List<T>::Iterator List<T>::Iterator::operator++(int)
 		{
         	Iterator tmp = (*this);
-        	++*this;
+        	++(*this);
         	return tmp;
 		}
 
         template < class T >
-        bool List<T>::Iterator::operator!=(const Iterator& iterator) const
+        bool List<T>::Iterator::operator!=(const Iterator& rhs)
 		{
-        	return (this->pCurrentNode != iterator.pCurrentNode);
+        	return (this->pCurrentNode != rhs.pCurrentNode);
 		}
 
         template < class T >
-        bool List<T>::Iterator::operator==(const Iterator& iterator) const
+        bool List<T>::Iterator::operator==(const Iterator& rhs)
         {
-            return (this->pCurrentNode == iterator.pCurrentNode);
+            return (this->pCurrentNode == rhs.pCurrentNode);
         }
 
-        template < class T >
-        T List<T>::Iterator::operator*() const
-        {
-        	return pCurrentNode->data;
-        }
-
-        template < class T >
-        T* List<T>::Iterator::operator->() const
-        {
-            return &pCurrentNode->data;
-        }
 
         /**
          * List methods
          */
+        template < class T >
+        List<T>::List()
+        {
+            Init();
+        }
+
 
         template < class T >
         List<T>::~List()
         {
-        	Clear();
+            Clear();
+            delete this->pHead;
+            delete this->pTail;
+        }
+
+        template < class T >
+        List<T>::List(const List& rhs)
+        {
+        	//TODO:
+            Init();
+
+            for( auto & x : rhs )
+            	PushFront( x );
+        }
+
+        template < class T >
+        List<T>& List<T>::operator=(const List<T>& rhs)
+        {
+            List copy = rhs;
+            std::swap(*this, copy);
+            return *this;
+        }
+
+        template < class T >
+        List<T>& List<T>::operator=(const List<T>&& rhs)
+        {
+            std::swap( this->size, rhs.size);
+            std::swap( this->pHead, rhs.pHead);
+
+            return *this;
         }
 
         template < class T >
         void List<T>::Clear(void)
 		{
-            Node * pCrawler = this->pHead;
-
-            while (pCrawler)
-            {
-                Node * tmp = pCrawler;
-                pCrawler = pCrawler->pNext;
-                delete tmp;
-            }
+        	while (List<T>::IsEmpty() == false)
+        	{
+        		List<T>::PopFront();
+        	}
 		}
 
 
         template < class T >
-        class List<T>::Iterator List<T>::Begin(void) const
+        class List<T>::Iterator List<T>::Begin(void)
         {
-            return Iterator(pHead);
+            return Iterator(pHead->pNext);
         }
 
         template < class T >
-        class List<T>::Iterator List<T>::End(void) const
+        class List<T>::Iterator List<T>::End(void)
         {
-            return Iterator(nullptr);
+            return Iterator(pTail);
+        }
+
+
+        template < class T >
+        class List<T>::const_Iterator List<T>::Begin(void) const
+        {
+            return Iterator(pHead->pNext);
         }
 
         template < class T >
-        class List<T>::Iterator List<T>::PushFront(T data)
+        class List<T>::const_Iterator List<T>::End(void) const
         {
-        	Node * element = this->sentinel.NewNode(data);
+            return Iterator(pTail);
+        }
 
-            element->pNext = this->pHead;
-            this->pHead = element;
-            this->size++;
+        template < class T >
+        T& List<T>::Front(void)
+        {
+        	return *(List<T>::Begin());
+        }
+
+        template < class T >
+        T& List<T>::Back(void)
+        {
+        	// Not implemented, because for single linked list it's not efficient
+        	/*
+
+            */
+        }
+
+        template < class T >
+        const T& List<T>::Front(void) const
+        {
+        	return *(List<T>::Begin());
+        }
+
+        template < class T >
+        const T& List<T>::Back(void) const
+        {
+        	// Not implemented, because for single linked list it's not efficient
+        	/*
+
+            */
+        }
+
+        template < class T >
+        class List<T>::Iterator List<T>::PushFront(T& data)
+        {
+        	Node * element = new Node(data, this->pHead->pNext);
+            ++this->size;
+
+            this->pHead->pNext = element;
 
             return Iterator(element);
         }
 
         template < class T >
-        class List<T>::Iterator List<T>::PushBack(T data)
+        class List<T>::Iterator List<T>::PushBack(T& data)
         {
-            Node * element = this->sentinel.NewNode(data);
+        	// Not implemented, because for single linked list it's not efficient
+        	/*
 
-            if (this->pHead != nullptr)
-            {
-                Node * pCrawler = this->pHead;
+            */
+        }
 
-                while(pCrawler->pNext != nullptr)
-                {
-                    pCrawler = pCrawler->pNext;
-                }
-                pCrawler->pNext = element;
-            }
-            else
-            {
-                this->pHead = element;
-            }
+        template < class T >
+        class List<T>::Iterator List<T>::PushFront(T&& data)
+        {
+        	Node * element = new Node( std::move(data), this->pHead->pNext);
+            ++this->size;
 
-            this->size++;
+            this->pHead->pNext = element;
 
             return Iterator(element);
         }
 
         template < class T >
-        void List<T>::Erase(Iterator& element)
+        class List<T>::Iterator List<T>::PushBack(T&& data)
+        {
+        	// Not implemented, because for single linked list it's not efficient
+        	/*
+
+            */
+        }
+
+        template < class T >
+        class List<T>::Iterator List<T>::Erase(Iterator it)
 		{
+        	// Not implemented, because for single linked list it's not efficient
+			/*
 
-        	if (element.pCurrentNode == this->pHead)
-        	{
-        		this->pHead = element.pCurrentNode->pNext;
-        		delete element.pCurrentNode;
-        		this->size--;
-        	}
-
-        	else if (element.pCurrentNode != nullptr)
-        	{
-                Node * pCrawler = this->pHead;
-
-                while(pCrawler->pNext != element.pCurrentNode)
-                {
-                    pCrawler = pCrawler->pNext;
-                }
-
-                pCrawler->pNext = element.pCurrentNode->pNext;
-                delete element.pCurrentNode;
-                this->size--;
-        	}
+			*/
 		}
 
         template < class T >
-        bool List<T>::IsEmpty(void)
+        void List<T>::PopFront(void)
 		{
-        	return (this->pHead == nullptr);
+        	Node * tmp = this->pHead->pNext;
+        	this->pHead->pNext = this->pHead->pNext->pNext;
+        	--this->size;
+        	delete tmp;
 		}
 
         template < class T >
-        size_t List<T>::Size(void)
+        void List<T>::PopBack(void)
+		{
+        	// Not implemented, because for single linked list it's not efficient
+        	/*
+        	if (List<T>::IsEmpty() == false)
+        	{
+            	Node * crawler = this->pHead->pNext;
+            	Node * prev = this->pHead;
+
+            	while (crawler->pNext != this->pTail)
+            	{
+            		prev = crawler;
+            		crawler = crawler->pNext;
+            	}
+        	}
+        	*/
+		}
+
+        template < class T >
+        bool List<T>::IsEmpty(void) const
+		{
+        	return (this->size == 0);
+		}
+
+        template < class T >
+        size_t List<T>::Size(void) const
 		{
         	return this->size;
 		}
+
+        template < class T >
+        void List<T>::Init(void)
+        {
+        	this->pHead = new Node;
+        	this->pTail = new Node;
+
+            this->pHead->pNext = this->pTail;
+
+            this->size = 0;
+        }
 
 
     }   /** SL */
@@ -202,17 +318,6 @@ namespace Qlib
         /**
          * Node methods
          */
-        template < class T >
-        class List<T>::Node* List<T>::Node::NewNode(T data)
-        {
-            Node * element = new Node;
-            element->data = data;
-            element->pNext = nullptr;
-            element->pPrev = nullptr;
-
-            return element;
-        }
-
 
         /**
          * Iterator methods
@@ -322,6 +427,8 @@ namespace Qlib
         List<T>::~List()
         {
             Clear();
+            delete this->pHead;
+            delete this->pTail;
         }
 
         template < class T >
@@ -329,8 +436,8 @@ namespace Qlib
         {
             Init();
 
-  //          this->pHead = rhs.pHead;
-    //        this->size = rhs.size;
+            for( auto & x : rhs )
+                PushBack( x );
         }
 
         template < class T >
@@ -340,8 +447,6 @@ namespace Qlib
             std::swap(*this, copy);
             return *this;
         }
-
-   //     List(const list&& rhs) : size(rhs.size), pHead(rhs.pHead);
 
         template < class T >
         List<T>& List<T>::operator=(const List<T>&& rhs)
@@ -357,34 +462,34 @@ namespace Qlib
         {
             return ( pHead->pNext );
         }
-/*
+
         template < class T >
-        List<T>::const_Iterator List<T>::Begin(void)
+        class List<T>::const_Iterator List<T>::Begin(void) const
         {
             return ( pHead->pNext);
         }
-*/
+
         template < class T >
         class List<T>::Iterator List<T>::End(void)
         {
             return ( Iterator (pTail ) );
         }
-/*
+
         template < class T >
-        List<T>::const_Iterator List<T>::End(void)
+        class List<T>::const_Iterator List<T>::End(void) const
         {
             return ( pHead );
         }
-*/
+
 
         template < class T >
-        size_t List<T>::Size(void)
+        size_t List<T>::Size(void) const
         {
         	return this->size;
         }
 
         template < class T >
-        bool List<T>::IsEmpty(void)
+        bool List<T>::IsEmpty(void) const
         {
         	return ( List<T>::Size() == 0);
         }
@@ -406,6 +511,19 @@ namespace Qlib
 
         template < class T >
         T& List<T>::Back(void)
+        {
+        	return *(--List<T>::End());
+        }
+
+
+        template < class T >
+        const T& List<T>::Front(void) const
+        {
+        	return *(List<T>::Begin());
+        }
+
+        template < class T >
+        const T& List<T>::Back(void) const
         {
         	return *(--List<T>::End());
         }
@@ -450,10 +568,10 @@ namespace Qlib
         class List<T>::Iterator List<T>::Insert(Iterator it, T& data)
         {
         	Node * tmp = it.pCurrentNode;
-        	Node * element = new Node(data, tmp->pPrev, tmp);
-        	tmp->pPrev = element;
-        	tmp->pPrev->pNext = element;
             ++this->size;
+        	Node * element = new Node(data, tmp->pPrev, tmp);
+        	tmp->pPrev->pNext = element;
+        	tmp->pPrev = tmp->pPrev->pNext;
 
         	return (Iterator( element ));
         }
@@ -461,24 +579,13 @@ namespace Qlib
         template < class T >
         class List<T>::Iterator List<T>::Insert(Iterator it, T&& data)
         {
-#if 0
-        	// DAFAQ?!?!?!!?! NOT working
-    //    	cout << "It: " << size;
         	Node * tmp = it.pCurrentNode;
-            ++size;
-
+            ++this->size;
         	Node * element = new Node( std::move( data ), tmp->pPrev, tmp);
-        	tmp->pPrev = element;
         	tmp->pPrev->pNext = element;
-
-      //  	cout << "It: " << size;
+        	tmp->pPrev = tmp->pPrev->pNext;
 
         	return (Iterator( element ));
-#else
-            Node *p = it.pCurrentNode;
-            ++this->size;
-            return Iterator( p->pPrev = p->pPrev->pNext = new Node( std::move( data ), p->pPrev, p ) );
-#endif
         }
 
         template < class T >

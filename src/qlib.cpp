@@ -13,7 +13,7 @@
 //using namespace QLib;
 using namespace std;
 using namespace Qlib;
-using namespace Qlib::DL;
+using namespace Qlib::SL;
 
 void matrixTest(void)
 {
