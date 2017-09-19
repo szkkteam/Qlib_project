@@ -9,11 +9,13 @@
 #include "qmatrix.h"
 #include "list.h"
 #include <iostream>
+#include "test.h"
 
 //using namespace QLib;
 using namespace std;
 using namespace Qlib;
-using namespace Qlib::SL;
+using namespace Qlib::DL;
+using namespace ECS;
 
 void matrixTest(void)
 {
@@ -53,15 +55,21 @@ void matrixTest(void)
     }
 }
 
+int valtozo1 = 0;
+int valtozo2 = 10;
+int valtozo3 = 20;
+int valtozo4 = 30;
+int valtozo5 = 40;
+
 void listTest(void)
 {
 
     List<int> list1;
-    list1.PushBack(11);
-    list1.PushBack(20);
-    List<int>::Iterator item = list1.PushBack(5);
-    list1.PushFront(0);
-    list1.PushFront(40);
+    list1.PushFront(valtozo1);
+    list1.PushFront(valtozo2);
+    List<int>::Iterator item = list1.PushFront(valtozo3);
+    list1.PushFront(valtozo4);
+    list1.PushFront(valtozo5);
 
     for (List<int>::Iterator it = list1.Begin(); it != list1.End(); it++)
     {
@@ -70,7 +78,13 @@ void listTest(void)
 
     cout << "size: " << list1.Size() << endl;
 
-    list1.Erase(item);
+    valtozo1 = 0;
+    valtozo2 = 100;
+    valtozo3 = 200;
+    valtozo4 = 300;
+    valtozo5 = 400;
+
+ //  list1.Erase(item);
 
     for (List<int>::Iterator it = list1.Begin(); it != list1.End(); it++)
     {
@@ -79,12 +93,69 @@ void listTest(void)
 
 }
 
+struct Position
+{
+    Position(float x, float y) : x(x), y(y) {}
+    Position() : x(0.f), y(0.f) {}
+
+    float x;
+    float y;
+};
+
+struct Rotation
+{
+    Rotation(float angle) : angle(angle) {}
+    Rotation() : angle(0) {}
+    float angle;
+};
+
+class GravitySystem : public EntitySystem
+{
+public:
+    GravitySystem(float amount)
+    {
+        gravityAmount = amount;
+    }
+
+    virtual ~GravitySystem() {}
+
+    virtual void tick(World* world, float deltaTime) override
+    {
+        world->each<Position>([&](Entity* ent, ComponentHandle<Position> position) {
+            position->y += gravityAmount * deltaTime;
+        });
+    }
+
+private:
+    float gravityAmount;
+};
+
 int main() {
+
+    World* world = World::createWorld();
+    world->registerSystem(new GravitySystem(-9.8f));
+
+    Entity* ent = world->create();
+    ent->assign<Position>(10.f, 0.f); // assign() takes arguments and passes them to the constructor
+    ent->assign<Position>(20.f, 10.f); // assign() takes arguments and passes them to the constructor
+    ent->assign<Rotation>(35.f);
+
+    ComponentHandle<Position> pos = ent->get<Position>();
+
+    if (pos)
+    {
+        std::cout << "My position is " << pos->x << ", " << pos->y << std::endl;
+    }
+    else
+    {
+        std::cout << "Not valid" << endl;
+    }
+
 
 	// Test the matrix Class;
 //	matrixTest();
 	// Test the list class
-	listTest();
+	//listTest();
 
 	return 0;
 }
